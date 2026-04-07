@@ -1,0 +1,91 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Inter:wght@400;500;600&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&display=swap');
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-handwriting: "Gochi Hand", cursive;
+  --font-sketch: "Cabin Sketch", cursive;
+}
+
+
+.cabin-sketch-regular {
+  font-family: "Cabin Sketch", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.cabin-sketch-bold {
+  font-family: "Cabin Sketch", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+:root {
+  --paper-bg: #fdfaf1;
+  --ink-color: #2d3436;
+  --margin-line: #ff7675;
+  --rule-line: #dfe6e9;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #e2e8f0;
+  color: var(--ink-color);
+  font-family: var(--font-sans);
+  overflow: hidden; /* Prevent body scroll, use internal scrolls */
+}
+
+.paper-texture {
+  background-color: var(--paper-bg);
+  background-image: 
+    linear-gradient(var(--rule-line) 1px, transparent 1px);
+  background-size: 100% 1.5rem;
+  position: relative;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+
+.sketch-border {
+  border: 2px solid var(--ink-color);
+  border-radius: 4px 12px 4px 14px / 12px 4px 14px 4px;
+}
+
+.handwriting {
+  font-family: var(--font-handwriting);
+}
+.sketch-font {
+  font-family: var(--font-sketch);
+}
+
+/* Custom scrollbar for paper feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-color);
+  border-radius: 10px;
+}
+
+
+input {
+  border: none;
+  border-bottom: 1px solid #ccc;
+  transition: all 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  border-bottom: 2px solid #3b82f6;
+}
