@@ -1,0 +1,21 @@
+{
+  "name": "bengine",
+  "version": "1.0.0",
+  "description": "It is the api server which communicate with the frontend and the judge",
+  "license": "ISC",
+  "author": "Aniket Bhogawar",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.4.1",
+    "nodemon": "^3.1.14"
+  }
+}
