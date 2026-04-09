@@ -1,8 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
+import { signupUser } from "../api/auth";
+import toast from "react-hot-toast";
+import Loader from "./Loader";
 import "../index.css";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -14,13 +18,26 @@ const Signup = () => {
   const handleChangePassword = (e) => {
     setPassword(e.target.value);
   };
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    console.log("First Name:", firstName);
-    console.log("Last Name:", lastName);
-    console.log("Email:", email);
-    console.log("Password:", password);
 
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    
+
+    if (!firstName || !lastName || !email || !password) {
+      toast.error("All fields are required");
+      
+      return;
+    }
+
+    try {
+      await signupUser({ firstName, lastName, email, password });
+
+      toast.success("Signup successful ");
+      navigate("..");
+    } catch (err) {
+      const message = err.response?.data?.message || "Something went wrong";
+      toast.error(message);
+    } 
   };
   const handleChangeFirstName = (e) => {
     setFirstName(e.target.value);
@@ -28,13 +45,16 @@ const Signup = () => {
   const handleChangeLastName = (e) => {
     setLastName(e.target.value);
   };
+
   return (
     <div className="wrapper text-center flex flex-col items-center justify-center h-[100vh]">
       <form
         className=" handwriting paper-texture sketch-border flex flex-col gap-5 w-[50%] items-center justify-center p-5 rounded-lg "
         onSubmit={handleFormSubmit}
       >
-        <h1 className=" text-blue-500 text-4xl sketch-font ">Join the Community</h1>
+        <h1 className=" text-blue-500 text-4xl sketch-font ">
+          Join the Community
+        </h1>
 
         <div className="flex flex-row w-[100%] justify-between">
           <div className="w-[50%]">

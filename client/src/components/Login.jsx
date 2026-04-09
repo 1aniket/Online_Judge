@@ -1,30 +1,57 @@
-import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../index.css";
+import { loginUser } from "../api/auth";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  
+  //Email two way binding
   const handleChangeEmail = (e) => {
     setEmail(e.target.value);
   };
+
+  //password two way binding
   const handleChangePassword = (e) => {
     setPassword(e.target.value);
   };
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
 
-  };
- 
+  //Form submit handler
+const handleFormSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!email || !password) {
+    toast.error("All fields are required");
+    return;
+  }
+
+  try {
+    const res = await loginUser({ email, password });
+
+    localStorage.setItem("token", res.data.token);
+
+    toast.success("Login successful");
+
+    navigate("/", { replace: true });
+
+  } catch (err) {
+    toast.error(err.response?.data?.message || "Login failed");
+  }
+};
+
   return (
     <div className="wrapper text-center flex flex-col items-center justify-center h-[100vh]">
       <form
         className="handwriting paper-texture sketch-border flex flex-col gap-5 w-[40%] items-center justify-center p-5 rounded-lg "
         onSubmit={handleFormSubmit}
       >
-        <h1 className=" text-blue-500 text-4xl sketch-font">Login to Community</h1>
+        <h1 className=" text-blue-500 text-4xl sketch-font">
+          Login to Community
+        </h1>
 
         <div className="flex flex-col w-[100%]">
           <label
@@ -80,5 +107,5 @@ const Login = () => {
       </form>
     </div>
   );
-}
+};
 export default Login;
