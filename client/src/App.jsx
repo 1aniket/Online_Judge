@@ -6,6 +6,8 @@ import { SecretRoute } from "./components/Routesacsess";
 import SecretPage from "./pages/SecretPage";
 import { Toaster } from "react-hot-toast";
 import ErrorPage from "./pages/ErrorPage";
+import Problemspage from "./pages/Problemspage";
+
 
 const App = () => {
   const location = useLocation();
@@ -24,6 +26,7 @@ const App = () => {
               </SecretRoute>
             }
           />
+          <Route path="/getquestions" element={<Problemspage />}/>
           <Route path="/*" element={<ErrorPage />} /> {/* Catch-all route for undefined paths */}
         </Routes>
       </div>
