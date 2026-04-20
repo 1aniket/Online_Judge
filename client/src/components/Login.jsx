@@ -33,6 +33,7 @@ const handleFormSubmit = async (e) => {
     const res = await loginUser({ email, password });
 
     localStorage.setItem("token", res.data.token);
+    localStorage.setItem("user", JSON.stringify(res.data.user.role));
 
     toast.success("Login successful");
 

@@ -6,10 +6,12 @@ function PublicRoute({ children }) {
   return user ? <Navigate to="/" replace /> : children;
 }
 
-const SecretRoute = ({ children }) => {
-  const user = localStorage.getItem("token");
+const AdminRoute = ({ children }) => {
+  const user = localStorage.getItem("user");
 
-  return user ? children : <Navigate to="/auth" replace />;
+  const role = JSON.parse(user); // Parse the user role from localStorage
+
+  return role === "admin" ? children : <Navigate to="/" replace />;
 };
 
-export { SecretRoute, PublicRoute };
+export { PublicRoute, AdminRoute };

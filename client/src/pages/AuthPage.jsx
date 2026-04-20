@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
 import { PublicRoute } from "../components/Routesacsess";
+import ErrorPage from "./ErrorPage";
 
 const AuthPage = () => {
   return (
@@ -23,6 +24,7 @@ const AuthPage = () => {
             </PublicRoute>
           }
         />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </div>
   );

@@ -2,11 +2,13 @@ import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import AuthPage from "./pages/Authpage";
 import HomePage from "./pages/HomePage";
-import { SecretRoute } from "./components/Routesacsess";
-import SecretPage from "./pages/SecretPage";
+import { AdminRoute} from "./components/Routesacsess";
 import { Toaster } from "react-hot-toast";
 import ErrorPage from "./pages/ErrorPage";
 import Problemspage from "./pages/Problemspage";
+import CreateQuestion from "./pages/QuestionCreate";
+import AdminPage from "./pages/AdminPage";
+import DeleteQuestion from "./pages/QuestionDelete";
 
 
 const App = () => {
@@ -18,15 +20,11 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/auth/*" element={<AuthPage key={location.pathname} />} />
-          <Route
-            path="/secret"
-            element={
-              <SecretRoute>
-                <SecretPage />
-              </SecretRoute>
-            }
-          />
+        
           <Route path="/getquestions" element={<Problemspage />}/>
+          <Route path="/admin" element={<AdminRoute><AdminPage/></AdminRoute>} />
+          <Route path="/create-question" element={<AdminRoute><CreateQuestion/></AdminRoute>} />
+          <Route path="/delete-question" element={<AdminRoute><DeleteQuestion/></AdminRoute>} />
           <Route path="/*" element={<ErrorPage />} /> {/* Catch-all route for undefined paths */}
         </Routes>
       </div>
