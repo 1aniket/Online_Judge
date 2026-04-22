@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/authRoutes.js";
 import { protect } from "./middlewares/authMiddleware.js";
 import questionRoutes from "./routes/questionRoute.js";
-import { runCode } from "./controllers/runCode.js";
+import { runCode } from "./controllers/runController.js";
 
 dotenv.config();
 
@@ -29,13 +29,6 @@ app.get("/api/protected", protect, (req, res) => {
   res.json({ message: "You are authorized", user: req.user });
 });
 
-app.post("/api/run", async (req, res) => {
-  try {
-    const codeOutput = await runCode(req, res);
-    console.log("Code output:", codeOutput);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: "Failed to load code runner" });
-  }});
+app.post("/api/run", runCode);
 
 app.listen(5000, () => console.log("Server running on port 5000"));
