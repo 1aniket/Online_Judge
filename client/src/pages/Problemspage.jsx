@@ -34,7 +34,7 @@ const Problems = () => {
 
       <div className="space-y-4">
         {problems.map((problem , index) => (
-            <Link key={problem._id} to={`/api/questions/${problem._id}`}>
+            <Link key={problem._id} to={`/questions/${problem._id}`}>
               <div className=" handwriting bg-white-50 p-4 rounded-lg shadow-sm  flex justify-between items-center">
                 <div>
                   <h2 className="text-lg font-semibold">

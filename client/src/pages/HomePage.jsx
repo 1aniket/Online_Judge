@@ -14,6 +14,9 @@ const HomePage = () => {
         <div className="sketch-border text-center justify-center items-center p-1 sketch-font hover:bg-gray-700 hover:text-white transition">
           <Link to={"/getquestions"}>Problem</Link>
         </div>
+         <div className="sketch-border text-center justify-center items-center p-1 sketch-font hover:bg-gray-700 hover:text-white transition">
+          <Link to={"/compiler"}>Compiler</Link>
+        </div>
         {user === "admin" && (
           <button className="sketch-border p-2 sketch-font hover:bg-gray-700 hover:text-white transition">
             <Link to={"/admin"}>Admin Panel</Link>

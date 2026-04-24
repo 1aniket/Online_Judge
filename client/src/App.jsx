@@ -9,6 +9,8 @@ import Problemspage from "./pages/Problemspage";
 import CreateQuestion from "./pages/QuestionCreate";
 import AdminPage from "./pages/AdminPage";
 import DeleteQuestion from "./pages/QuestionDelete";
+import ProblemDescPage from "./pages/ProblemDescPage";
+import CompilerPage from "./pages/CompilerPage";
 
 
 const App = () => {
@@ -22,6 +24,8 @@ const App = () => {
           <Route path="/auth/*" element={<AuthPage key={location.pathname} />} />
         
           <Route path="/getquestions" element={<Problemspage />}/>
+          <Route path="/questions/:id" element={<ProblemDescPage />} />
+          <Route path="/compiler" element={<CompilerPage />} />
           <Route path="/admin" element={<AdminRoute><AdminPage/></AdminRoute>} />
           <Route path="/create-question" element={<AdminRoute><CreateQuestion/></AdminRoute>} />
           <Route path="/delete-question" element={<AdminRoute><DeleteQuestion/></AdminRoute>} />
