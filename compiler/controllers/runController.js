@@ -1,19 +1,32 @@
 import { executeCpp } from "../executor/cppExecutor.js";
+import { executePython } from "../executor/pythonExecutor.js";
+import { runJava } from "../executor/javaExecutor.js";
 
 export const runCode = async (req, res) => {
   try {
-    const { code, testCases } = req.body;
+    const { language, code, testCases } = req.body;
 
-    if (!code || !testCases) {
-      return res.status(400).json({ success: false });
+    let result;
+
+    if (language == "cpp") {
+      result = await executeCpp(code, testCases);
+    } 
+    else if (language == "python") {
+      result = await executePython(code, testCases);
+    }else if(language == "java"){
+      result = await runJava(code, testCases);
     }
-
-    const result = await executeCpp(code, testCases);
+    else {
+      return res.status(400).json({
+        success: false,
+        message: "Unsupported language",
+      });
+    }
 
     return res.json(result);
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false });
+    return res.status(500).json({ success: false });
   }
 };

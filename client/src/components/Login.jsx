@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import "../index.css";
 import { loginUser } from "../api/auth";
 import { useNavigate } from "react-router-dom";
+import { ScaleLoader } from "react-spinners";
 import toast from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   
   //Email two way binding
   const handleChangeEmail = (e) => {
@@ -30,6 +32,7 @@ const handleFormSubmit = async (e) => {
   }
 
   try {
+    setLoading(true);
     const res = await loginUser({ email, password });
 
     localStorage.setItem("token", res.data.token);
@@ -38,9 +41,12 @@ const handleFormSubmit = async (e) => {
     toast.success("Login successful");
 
     navigate("/", { replace: true });
+    setLoading(false);
 
   } catch (err) {
     toast.error(err.response?.data?.message || "Login failed");
+  }finally {
+    setLoading(false);
   }
 };
 
@@ -95,7 +101,8 @@ const handleFormSubmit = async (e) => {
           className="text-gray-500 w-[50%] sketch-font font-bold py-2 px-4 border-2 sketch-border rounded-full hover:bg-gray-500 hover:text-white"
           type="submit"
         >
-          Login
+         {loading ? <ScaleLoader color="white" /> : "Login"}
+         
         </button>
         <div className="flex items-center justify-center w-[100%]">
           <p className="font-medium text-lg">

@@ -4,6 +4,7 @@ import Signup from "../components/Signup";
 import { PublicRoute } from "../components/Routesacsess";
 import ErrorPage from "./ErrorPage";
 
+
 const AuthPage = () => {
   return (
     <div className="bg-slate-200">

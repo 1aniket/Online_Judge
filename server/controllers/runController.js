@@ -2,12 +2,12 @@ import axios from "axios";
 
 export const runCode = async (req, res) => {
   try {
-    const { code, testCases } = req.body;
+    const { code, language, testCases } = req.body;
 
-    if (!code || !testCases) {
+    if (!code || !testCases ||!language) {
       return res.status(400).json({
         success: false,
-        message: "Code and testCases required",
+        message: "Code, language, and testCases required",
       });
     }
 
@@ -16,6 +16,7 @@ export const runCode = async (req, res) => {
       process.env.COMPILER_URL,
       {
         code,
+        language,
         testCases,
       },
       {
