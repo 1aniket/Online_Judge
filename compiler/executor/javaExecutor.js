@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { v4 as uuidv4 } from "uuid";
+import crypto from "crypto"; // ✅ replace uuid
 import { exec } from "child_process";
 
 const tempDir = path.join(process.cwd(), "temp");
@@ -12,9 +12,12 @@ if (!fs.existsSync(tempDir)) {
 const runExec = (cmd) => {
   return new Promise((resolve) => {
     exec(cmd, { timeout: 5000 }, (error, stdout, stderr) => {
-      if (error) {
+      if (error || stderr) {
+        console.log("CMD:", cmd);
+        console.log("ERROR:", error ? error.message : "");
+        console.log("STDERR:", stderr);
         return resolve({
-          error: stderr || error.message,
+          error: stderr || (error ? error.message : ""),
         });
       }
       resolve({
@@ -25,11 +28,13 @@ const runExec = (cmd) => {
 };
 
 export const runJava = async (code, testCases) => {
-  const jobId = uuidv4().replace(/-/g, "_"); // 🔥 FIX
-  const filePath = path.join(tempDir, `Main_${jobId}.java`);
-  const className = `Main_${jobId}`;
+  // ✅ Docker-safe UUID
+  const jobId = crypto.randomUUID().replace(/-/g, "_");
 
-  // 🔥 Replace class name dynamically
+  const className = `Main_${jobId}`;
+  const filePath = path.join(tempDir, `${className}.java`);
+
+  // 🔥 Ensure correct class name
   const updatedCode = code.replace(
     /public\s+class\s+Main/,
     `public class ${className}`
@@ -59,10 +64,13 @@ export const runJava = async (code, testCases) => {
     fs.writeFileSync(inputPath, fixedInput);
 
     const runCmd = `java -cp "${tempDir}" ${className} < "${inputPath}"`;
-
     const result = await runExec(runCmd);
 
-    const actual = result.output?.trim() || "";
+    if (result.error) {
+      return { success: false, error: result.error };
+    }
+
+    const actual = result.output ? result.output.trim() : "";
     const expected = tc.output.trim();
 
     const isPassed = actual === expected;
@@ -76,15 +84,21 @@ export const runJava = async (code, testCases) => {
       passed: isPassed,
     });
 
-    if (fs.existsSync(inputPath)) await fs.unlinkSync(inputPath);
+    // 🔥 cleanup input safely
+    try {
+      if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
+    } catch {}
   }
 
   // ---------------- CLEANUP ----------------
   const classFile = path.join(tempDir, `${className}.class`);
 
-  [filePath, classFile].forEach(async (file) => {
-    if (fs.existsSync(file)) await fs.unlinkSync(file);
-  });
+  try {
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    if (fs.existsSync(classFile)) fs.unlinkSync(classFile);
+  } catch (err) {
+    console.log("Cleanup error:", err.message);
+  }
 
   return {
     success: true,

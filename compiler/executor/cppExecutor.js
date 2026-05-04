@@ -1,11 +1,12 @@
 import fs from "fs";
 import path from "path";
 import { exec } from "child_process";
-import { v4 as uuidv4 } from "uuid";
+import crypto from "crypto"; // ✅ REPLACED uuid
 import { normalize } from "../lib/Normalize.js";
 
 const tempDir = path.join(process.cwd(), "temp");
 
+// Ensure temp dir exists
 if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir, { recursive: true });
 }
@@ -13,11 +14,11 @@ if (!fs.existsSync(tempDir)) {
 const runExec = (command) => {
   return new Promise((resolve) => {
     exec(command, { timeout: 5000 }, (error, stdout, stderr) => {
-      if (error , stderr) {
-        console.log(`Error executing command: ${command}`);
-        console.log(`Error: ${error.message}`);
-        console.log(`Stderr: ${stderr}`);
-        return resolve({ error: stderr || error.message });
+      if (error || stderr) {
+        console.log("CMD:", command);
+        console.log("ERROR:", error ? error.message : "");
+        console.log("STDERR:", stderr);
+        return resolve({ error: stderr || (error ? error.message : "") });
       }
       resolve({ output: stdout });
     });
@@ -25,11 +26,11 @@ const runExec = (command) => {
 };
 
 export const executeCpp = async (code, testCases) => {
-  const jobId = uuidv4();
+  // ✅ Use native Node UUID
+  const jobId = crypto.randomUUID();
 
   const filePath = path.join(tempDir, `${jobId}.cpp`);
-  const outputPath = path.join(tempDir, `${jobId}.exe`);
-
+  const outputPath = path.join(tempDir, `${jobId}`); // 🔥 better than .out
   const inputPath = path.join(tempDir, `${jobId}.txt`);
 
   fs.writeFileSync(filePath, code);
@@ -42,13 +43,15 @@ export const executeCpp = async (code, testCases) => {
     return { success: false, error: compileResult.error };
   }
 
+  // 🔥 Ensure executable permission
+  await runExec(`chmod +x "${outputPath}"`);
+
   let passed = 0;
   const results = [];
 
   for (let tc of testCases) {
     const fixedInput = tc.input.replace(/\\n/g, "\n");
     fs.writeFileSync(inputPath, fixedInput);
-    
 
     const runCmd = `"${outputPath}" < "${inputPath}"`;
     const result = await runExec(runCmd);
@@ -57,10 +60,10 @@ export const executeCpp = async (code, testCases) => {
       return { success: false, error: result.error };
     }
 
-    const actual = result.output?.trim();
+    const actual = result.output ? result.output.trim() : "";
     const expected = tc.output.trim();
-    //DEBUG 
-    console.log("Test Case:", { input: tc.input, expected, actual });
+
+
     const isPassed = normalize(actual) === normalize(expected);
 
     if (isPassed) passed++;
@@ -73,13 +76,14 @@ export const executeCpp = async (code, testCases) => {
     });
   }
 
-  // Cleanup
-  [filePath, outputPath, inputPath].forEach(async (file) => {
-    
-    try {
-      if (fs.existsSync(file)) await fs.promises.unlink(file);
-    } catch {}
-  });
+  // 🔥 Cleanup (safe + sync)
+  try {
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
+    if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
+  } catch (err) {
+    console.log("Cleanup error:", err.message);
+  }
 
   return {
     success: true,

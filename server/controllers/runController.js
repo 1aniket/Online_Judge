@@ -1,4 +1,5 @@
 import axios from "axios";
+import { GoogleGenAI } from "@google/genai";
 
 export const runCode = async (req, res) => {
   try {
@@ -27,6 +28,7 @@ export const runCode = async (req, res) => {
       }
     );
 
+    console.log("Compiler Service Response:", response.data);
     // ✅ Send back compiler response to client
     return res.json(response.data);
 

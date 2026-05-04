@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { v4 as uuidv4 } from "uuid";
+import crypto from "crypto";
 import { exec } from "child_process";
 
 const tempDir = path.join(process.cwd(), "temp");
@@ -12,9 +12,12 @@ if (!fs.existsSync(tempDir)) {
 const runExec = (cmd) => {
   return new Promise((resolve) => {
     exec(cmd, { timeout: 5000 }, (error, stdout, stderr) => {
-      if (error) {
+      if (error || stderr) {
+        console.log("CMD:", cmd);
+        console.log("ERROR:", error ? error.message : "");
+        console.log("STDERR:", stderr);
         return resolve({
-          error: stderr || error.message,
+          error: stderr || (error ? error.message : ""),
         });
       }
       resolve({
@@ -25,9 +28,10 @@ const runExec = (cmd) => {
 };
 
 export const executePython = async (code, testCases) => {
-  const jobId = uuidv4();
+  const jobId = crypto.randomUUID();
 
   const filePath = path.join(tempDir, `${jobId}.py`);
+  const inputPath = path.join(tempDir, `${jobId}.txt`);
 
   // 🔥 Write code
   fs.writeFileSync(filePath, code);
@@ -36,18 +40,19 @@ export const executePython = async (code, testCases) => {
   const results = [];
 
   for (let tc of testCases) {
-    const inputPath = path.join(tempDir, `${jobId}.txt`);
-
-    // 🔥 Fix escaped newline
     const fixedInput = tc.input.replace(/\\n/g, "\n");
     fs.writeFileSync(inputPath, fixedInput);
 
-    // ⚠️ Change python → python3 if needed
-    const cmd = `python "${filePath}" < "${inputPath}"`;
+    // 🔥 Use python3 (Docker safe)
+    const cmd = `python3 "${filePath}" < "${inputPath}"`;
 
     const result = await runExec(cmd);
 
-    const actual = result.output?.trim() || "";
+    if (result.error) {
+      return { success: false, error: result.error };
+    }
+
+    const actual = result.output ? result.output.trim() : "";
     const expected = tc.output.trim();
 
     const isPassed = actual === expected;
@@ -60,13 +65,15 @@ export const executePython = async (code, testCases) => {
       actual,
       passed: isPassed,
     });
-
-    // cleanup input file
-    if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
   }
 
-  // cleanup code file
-  if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  // 🔥 Cleanup
+  try {
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath);
+  } catch (err) {
+    console.log("Cleanup error:", err.message);
+  }
 
   return {
     success: true,

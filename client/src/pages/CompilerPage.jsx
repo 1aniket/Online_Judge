@@ -1,12 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Editor from "@monaco-editor/react";
 
 
 
 const CompilerPage = () => {
+  const templateCode = {
+    cpp: `#include <iostream>
+using namespace std; 
+int main(){
+// Your code here
+
+}`,
+
+java: `public class Main {
+    public static void main(String[] args) {
+        // Your code here
+    }
+} `,
+
+python: `# Your code here  
+`    
+  };
+
+
   const [language, setLanguage] = useState("cpp");
-  const [code, setCode] = useState("//Code here\n#include <iostream>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}");
+  const [code, setCode] = useState(templateCode.cpp);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [running, setRunning] = useState(false);
@@ -45,6 +64,10 @@ const CompilerPage = () => {
     setCode("");
   };
 
+  useEffect(() => {
+    setCode(templateCode[language]);
+  }, [language]);
+
   return (
     <div className="h-screen flex flex-col">
 
@@ -58,7 +81,8 @@ const CompilerPage = () => {
           className="border p-2 rounded text-sm"
         >
           <option value="cpp">C++</option>
-          
+          <option value="java">Java</option>
+          <option value="python">Python</option>
         </select>
       </div>
 

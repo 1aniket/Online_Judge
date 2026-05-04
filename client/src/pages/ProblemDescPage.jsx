@@ -4,9 +4,12 @@ import axios from "axios";
 import Editor from "@monaco-editor/react";
 import toast from "react-hot-toast";
 import { BarLoader } from "react-spinners";
+import {GoogleGenAI} from "@google/genai";
 
 const ProblemPage = () => {
   const { id } = useParams();
+  console.log()
+  const ai = new GoogleGenAI({apiKey: import.meta.env.VITE_GEMINI_API_KEY});
   const template = {
     cpp: `// Write your code here \n#include <iostream>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}`,
     python: `import sys
@@ -43,6 +46,23 @@ public class Main {
   const [code, setCode] = useState(template[language]);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
+
+
+  async function AiResponse(data) {
+          const responseAI = await ai.models.generateContent({
+            model: "gemini-3-flash-preview",
+            contents:`"I am a beginner. Look at my code and the terminal error below. Please explain the mistake in 1-2 simple sentences and highlight the line number where that issue might be . Keep it very short."
+
+My Code:
+${data.code}
+
+Terminal Error:
+${data.terminal}` ,
+          });
+          console.log(responseAI.text);
+          setOutput(responseAI.text);
+        }
+
 
   // Update code template when language changes
   useEffect(() => {
@@ -84,7 +104,15 @@ public class Main {
       if (result.success) {
         setOutput(result.results?.[0]?.actual || "No output");
       } else {
-        setOutput(result.error);
+        
+        const data  = {
+          code,
+          terminal:result.error
+        }
+
+        AiResponse(data);
+
+        //setOutput(responseAI.text);
       }
       setRun(false);
     } catch (err) {
