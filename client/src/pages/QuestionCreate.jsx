@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { ChevronDown } from "lucide-react";
 
 const CreateQuestion = () => {
   const [activeTab, setActiveTab] = useState("problem");
@@ -17,8 +18,6 @@ const CreateQuestion = () => {
     examples: [{ input: "", output: "", explanation: "" }],
     testCases: [{ input: "", output: "", isHidden: false }],
   });
-
-  // ---------------- HANDLERS ----------------
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -49,12 +48,9 @@ const CreateQuestion = () => {
   const addTestCase = () => {
     setFormData((prev) => ({
       ...prev,
-      testCases: [
-        ...prev.testCases,
-        { input: "", output: "", isHidden: false },
-      ],
+      testCases: [...prev.testCases, { input: "", output: "", isHidden: false }],
     }));
-    setSelectedCase(formData.testCases.length); // auto-select new one
+    setSelectedCase(formData.testCases.length);
   };
 
   const handleSubmit = async (e) => {
@@ -73,15 +69,11 @@ const CreateQuestion = () => {
           : [],
       };
 
-      await axios.post(
-        "http://localhost:5000/api/questions/create",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.post("http://localhost:5000/api/questions/create", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       toast.success("Question created successfully!");
     } catch (error) {
@@ -90,24 +82,28 @@ const CreateQuestion = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fdfbf7] p-4 flex justify-center">
+    <div className="px-4 py-8 sm:px-6 lg:px-8 flex justify-center">
       <form
         onSubmit={handleSubmit}
-        className="h-[70%] text-sm w-[70%] border-2 p-2 rounded-lg flex flex-col gap-2"
+        className="flex w-full max-w-5xl flex-col gap-5 rounded-[28px] border border-white/10 bg-white/[0.04] p-4 text-sm shadow-[0_24px_70px_-32px_rgba(0,0,0,0.95)] backdrop-blur sm:p-6"
       >
-        <h1 className="text-2xl font-semibold">Create Question</h1>
+        <div className="space-y-2">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
+            Create Question
+          </p>
+          <h1 className="text-3xl font-semibold tracking-tight text-white">Compose a new coding problem.</h1>
+        </div>
 
-        {/* ---------------- TABS ---------------- */}
-        <div className="flex gap-6 border-b">
+        <div className="flex flex-wrap gap-3 border-b border-white/10 pb-3">
           {["problem", "examples", "testcases"].map((tab) => (
             <button
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab)}
-              className={`pb-2 capitalize ${
+              className={`rounded-full px-4 py-2 capitalize transition ${
                 activeTab === tab
-                  ? "border-b-2 border-black font-semibold"
-                  : "text-gray-500"
+                  ? "bg-cyan-400 text-slate-950"
+                  : "border border-white/10 bg-white/[0.03] text-slate-300 hover:border-cyan-300/30 hover:text-white"
               }`}
             >
               {tab}
@@ -115,14 +111,13 @@ const CreateQuestion = () => {
           ))}
         </div>
 
-        {/* ---------------- PROBLEM ---------------- */}
         {activeTab === "problem" && (
-          <div className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
             <input
               name="title"
               value={formData.title}
               placeholder="Title"
-              className="w-full border-b p-2"
+              className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-slate-100"
               onChange={handleChange}
             />
 
@@ -130,7 +125,7 @@ const CreateQuestion = () => {
               name="slug"
               value={formData.slug}
               placeholder="Slug"
-              className="w-full border-b p-2"
+              className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-slate-100"
               onChange={handleChange}
             />
 
@@ -138,25 +133,33 @@ const CreateQuestion = () => {
               name="description"
               value={formData.description}
               placeholder="Description"
-              className="w-full border p-2 rounded"
+              className="min-h-40 w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-slate-100 md:col-span-2"
               onChange={handleChange}
             />
 
-            <select
-              name="difficulty"
-              value={formData.difficulty}
-              onChange={handleChange}
-            >
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
+            <div className="relative">
+              <select
+                name="difficulty"
+                value={formData.difficulty}
+                onChange={handleChange}
+                className="w-full appearance-none rounded-2xl border border-white/10 bg-[#0b1422] py-3 pl-3 pr-10 text-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]"
+                style={{ colorScheme: "dark" }}
+              >
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+              <ChevronDown
+                size={16}
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+              />
+            </div>
 
             <input
               name="tags"
               value={formData.tags}
               placeholder="Tags (comma separated)"
-              className="w-full border-b p-2"
+              className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-slate-100"
               onChange={handleChange}
             />
 
@@ -164,7 +167,7 @@ const CreateQuestion = () => {
               name="companies"
               value={formData.companies}
               placeholder="Companies (comma separated)"
-              className="w-full border-b p-2"
+              className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-slate-100"
               onChange={handleChange}
             />
 
@@ -172,84 +175,72 @@ const CreateQuestion = () => {
               name="constraints"
               value={formData.constraints}
               placeholder="Constraints"
-              className="w-full border-b p-2"
+              className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-slate-100 md:col-span-2"
               onChange={handleChange}
             />
           </div>
         )}
 
-        {/* ---------------- EXAMPLES ---------------- */}
         {activeTab === "examples" && (
           <div>
             {formData.examples.map((ex, i) => (
-              <div key={i} className="border p-3 rounded mb-3 space-y-2">
+              <div key={i} className="mb-3 space-y-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                 <input
                   value={ex.input}
                   placeholder="Input"
-                  onChange={(e) =>
-                    handleExampleChange(i, "input", e.target.value)
-                  }
+                  className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-slate-100"
+                  onChange={(e) => handleExampleChange(i, "input", e.target.value)}
                 />
                 <input
                   value={ex.output}
                   placeholder="Output"
-                  onChange={(e) =>
-                    handleExampleChange(i, "output", e.target.value)
-                  }
+                  className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-slate-100"
+                  onChange={(e) => handleExampleChange(i, "output", e.target.value)}
                 />
                 <input
                   value={ex.explanation}
                   placeholder="Explanation"
-                  onChange={(e) =>
-                    handleExampleChange(i, "explanation", e.target.value)
-                  }
+                  className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-slate-100"
+                  onChange={(e) => handleExampleChange(i, "explanation", e.target.value)}
                 />
               </div>
             ))}
-            <button type="button" onClick={addExample}>
+            <button
+              type="button"
+              onClick={addExample}
+              className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 font-medium text-slate-300 transition hover:border-cyan-300/30 hover:text-white"
+            >
               + Add Example
             </button>
           </div>
         )}
 
-        {/* ---------------- TEST CASES ---------------- */}
         {activeTab === "testcases" && (
-          <div className="flex gap-4">
-
-            {/* LEFT SIDE */}
-            <div className="w-1/2 border p-4 rounded space-y-3">
-              <h3 className="font-semibold">Test Case Editor</h3>
+          <div className="grid gap-4 lg:grid-cols-2">
+            <div className="space-y-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+              <h3 className="font-semibold text-white">Test Case Editor</h3>
 
               <textarea
-                className="w-full border p-2"
+                className="min-h-40 w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-slate-100"
                 value={formData.testCases[selectedCase]?.input || ""}
-                onChange={(e) =>
-                  handleTestCaseChange(selectedCase, "input", e.target.value)
-                }
+                onChange={(e) => handleTestCaseChange(selectedCase, "input", e.target.value)}
                 placeholder="Input"
               />
 
               <input
-                className="w-full border p-2"
+                className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-3 text-slate-100"
                 value={formData.testCases[selectedCase]?.output || ""}
-                onChange={(e) =>
-                  handleTestCaseChange(selectedCase, "output", e.target.value)
-                }
+                onChange={(e) => handleTestCaseChange(selectedCase, "output", e.target.value)}
                 placeholder="Output"
               />
 
-              <label>
+              <label className="text-slate-300">
                 <input
                   type="checkbox"
-                  checked={
-                    formData.testCases[selectedCase]?.isHidden || false
-                  }
+                  className="mr-2"
+                  checked={formData.testCases[selectedCase]?.isHidden || false}
                   onChange={(e) =>
-                    handleTestCaseChange(
-                      selectedCase,
-                      "isHidden",
-                      e.target.checked
-                    )
+                    handleTestCaseChange(selectedCase, "isHidden", e.target.checked)
                   }
                 />
                 Hidden
@@ -258,21 +249,22 @@ const CreateQuestion = () => {
               <button
                 type="button"
                 onClick={addTestCase}
-                className="border px-3 py-1"
+                className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 font-medium text-slate-300 transition hover:border-cyan-300/30 hover:text-white"
               >
                 + Add Test Case
               </button>
             </div>
 
-            {/* RIGHT SIDE */}
-            <div className="w-1/2">
+            <div>
               <div className="flex flex-wrap gap-2">
                 {formData.testCases.map((_, i) => (
                   <div
                     key={i}
                     onClick={() => setSelectedCase(i)}
-                    className={`px-4 py-2 border rounded-full cursor-pointer ${
-                      selectedCase === i ? "bg-black text-white" : ""
+                    className={`cursor-pointer rounded-full border px-4 py-2 ${
+                      selectedCase === i
+                        ? "border-cyan-300/30 bg-cyan-400 text-slate-950"
+                        : "border-white/10 bg-white/[0.03] text-slate-300"
                     }`}
                   >
                     TC {i + 1}
@@ -280,25 +272,21 @@ const CreateQuestion = () => {
                 ))}
               </div>
 
-              {/* PREVIEW */}
-              <div className="mt-4 border p-3 rounded">
-                <h4 className="font-semibold">
-                  Test Case {selectedCase + 1}
-                </h4>
-                <pre className="bg-gray-100 p-2 mt-2">
+              <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                <h4 className="font-semibold text-white">Test Case {selectedCase + 1}</h4>
+                <pre className="mt-2 whitespace-pre-wrap rounded-xl bg-[#0a1220] p-3 text-slate-200">
                   {formData.testCases[selectedCase]?.input}
                 </pre>
-                <p className="mt-2">
-                  Output: {formData.testCases[selectedCase]?.output}
-                </p>
+                <p className="mt-2 text-slate-300">Output: {formData.testCases[selectedCase]?.output}</p>
               </div>
             </div>
-
           </div>
         )}
 
-        {/* ---------------- SUBMIT ---------------- */}
-        <button type="submit" className="w-full bg-black text-white py-2 rounded">
+        <button
+          type="submit"
+          className="w-full rounded-full bg-cyan-400 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+        >
           Create Question
         </button>
       </form>

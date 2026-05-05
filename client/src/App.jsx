@@ -11,6 +11,7 @@ import AdminPage from "./pages/AdminPage";
 import DeleteQuestion from "./pages/QuestionDelete";
 import ProblemDescPage from "./pages/ProblemDescPage";
 import CompilerPage from "./pages/CompilerPage";
+import AppShell from "./components/AppShell";
 
 
 const App = () => {
@@ -18,18 +19,74 @@ const App = () => {
   return (
     <>
       <Toaster position="top-center" />
-      <div className="text-3xl font-semibold">
+      <div className="min-h-screen">
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/"
+            element={
+              <AppShell>
+                <HomePage />
+              </AppShell>
+            }
+          />
           <Route path="/auth/*" element={<AuthPage key={location.pathname} />} />
-        
-          <Route path="/getquestions" element={<Problemspage />}/>
-          <Route path="/questions/:id" element={<ProblemDescPage />} />
-          <Route path="/compiler" element={<CompilerPage />} />
-          <Route path="/admin" element={<AdminRoute><AdminPage/></AdminRoute>} />
-          <Route path="/create-question" element={<AdminRoute><CreateQuestion/></AdminRoute>} />
-          <Route path="/delete-question" element={<AdminRoute><DeleteQuestion/></AdminRoute>} />
-          <Route path="/*" element={<ErrorPage />} /> {/* Catch-all route for undefined paths */}
+
+          <Route
+            path="/getquestions"
+            element={
+              <AppShell>
+                <Problemspage />
+              </AppShell>
+            }
+          />
+          <Route
+            path="/questions/:id"
+            element={
+              <AppShell>
+                <ProblemDescPage />
+              </AppShell>
+            }
+          />
+          <Route
+            path="/compiler"
+            element={
+              <AppShell>
+                <CompilerPage />
+              </AppShell>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <AppShell>
+                <AdminRoute><AdminPage /></AdminRoute>
+              </AppShell>
+            }
+          />
+          <Route
+            path="/create-question"
+            element={
+              <AppShell>
+                <AdminRoute><CreateQuestion /></AdminRoute>
+              </AppShell>
+            }
+          />
+          <Route
+            path="/delete-question"
+            element={
+              <AppShell>
+                <AdminRoute><DeleteQuestion /></AdminRoute>
+              </AppShell>
+            }
+          />
+          <Route
+            path="/*"
+            element={
+              <AppShell>
+                <ErrorPage />
+              </AppShell>
+            }
+          />
         </Routes>
       </div>
     </>

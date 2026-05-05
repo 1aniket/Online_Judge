@@ -7,9 +7,7 @@ function PublicRoute({ children }) {
 }
 
 const AdminRoute = ({ children }) => {
-  const user = localStorage.getItem("user");
-
-  const role = JSON.parse(user); // Parse the user role from localStorage
+  const role = JSON.parse(localStorage.getItem("user") || "null");
 
   return role === "admin" ? children : <Navigate to="/" replace />;
 };
