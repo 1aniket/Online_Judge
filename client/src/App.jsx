@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import AuthPage from "./pages/Authpage";
+import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
 import { AdminRoute} from "./components/Routesacsess";
 import { Toaster } from "react-hot-toast";
