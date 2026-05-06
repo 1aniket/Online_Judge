@@ -51,7 +51,8 @@ public class Main {
 };
 
 const ProblemPage = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
+  console.log("ProblemPage slug:", slug);
   const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
   const [problem, setProblem] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -94,8 +95,9 @@ ${data.terminal}`,
 
   useEffect(() => {
     const fetchProblem = async () => {
+      console.log("Fetching problem with slug:", slug);
       try {
-        const res = await axios.get(`http://localhost:5000/api/questions/${id}`);
+        const res = await axios.get(`http://localhost:5000/api/questions/${slug}`);
         const data = res.data.data;
         setProblem(data);
         setTestCases(data?.testCases || []);
@@ -107,7 +109,7 @@ ${data.terminal}`,
     };
 
     fetchProblem();
-  }, [id]);
+  }, [slug]);
 
   const handleRun = async () => {
     try {

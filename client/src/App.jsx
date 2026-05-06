@@ -40,7 +40,7 @@ const App = () => {
             }
           />
           <Route
-            path="/questions/:id"
+            path="/questions/:slug"
             element={
               <AppShell>
                 <ProblemDescPage />

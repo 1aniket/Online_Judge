@@ -85,11 +85,11 @@ export const getAllQuestions = async (req, res) => {
 
 
 // ✅ GET SINGLE QUESTION
-export const getQuestionById = async (req, res) => {
+export const getQuestion = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { slug } = req.params;
 
-    const question = await Question.findById(id);
+    const question = await Question.findOne({ slug });
 
     if (!question) {
       return res.status(404).json({
@@ -118,10 +118,10 @@ export const getQuestionById = async (req, res) => {
 // ✅ UPDATE QUESTION
 export const updateQuestion = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { slug } = req.params;
 
-    const updated = await Question.findByIdAndUpdate(
-      id,
+    const updated = await Question.findOneAndUpdate(
+      { slug },
       req.body,
       { new: true, runValidators: true }
     );

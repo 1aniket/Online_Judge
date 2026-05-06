@@ -64,8 +64,8 @@ const Problems = () => {
           <div className="divide-y divide-white/10">
             {problems.map((problem, index) => (
               <Link
-                key={problem._id}
-                to={`/questions/${problem._id}`}
+                key={problem.slug}
+                to={`/questions/${problem.slug}`}
                 className="grid grid-cols-[72px_1fr_auto] items-center gap-3 px-6 py-5 transition hover:bg-white/[0.03] sm:grid-cols-[72px_1fr_auto_auto]"
               >
                 <span className="text-sm font-semibold text-slate-400">
