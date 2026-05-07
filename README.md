@@ -188,12 +188,25 @@ COMPILER_URL=https://compiler.bengine.space
 ---
 
 # 📸 Screenshots
-
-
-
-Example:
-
+HomePage:
 ![Homepage](./screenshots/Homepage.png)
+
+
+ProblemsPage:
+![Problempage](./screenshots/Problems.png)
+
+ProblemDescriptionPage:
+![Descpage](./screenshots/Description.png)
+![Descpage2](./screenshots/Description2.png)
+
+CompilerPage:
+![Compilerpage](./screenshots/Compiler.png)
+
+RegisterPage:
+![Register](./screenshots/Register.png)
+
+LoginPage:
+![Loginpage](./screenshots/Login.png)
 
 ---
 
