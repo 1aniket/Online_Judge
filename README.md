@@ -193,12 +193,7 @@ COMPILER_URL=https://compiler.bengine.space
 
 Example:
 
-```md
 ![Homepage](./screenshots/Homepage.png)
-
-
-
-```
 
 ---
 
