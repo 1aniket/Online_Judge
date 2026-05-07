@@ -194,7 +194,7 @@ COMPILER_URL=https://compiler.bengine.space
 Example:
 
 ```md
-![Homepage](./screenshots/Homepage.png)(./screenshots/Homepage2.png)
+![Homepage](./screenshots/Homepage.png)
 
 
 
