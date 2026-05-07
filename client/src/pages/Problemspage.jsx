@@ -16,7 +16,8 @@ const Problems = () => {
   useEffect(() => {
     const fetchProblems = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/questions");
+        
+        const res = await axios.get(`${import.meta.env.VITE_SERVER_URI}/api/questions`);
         setProblems(res.data.data);
       } catch (err) {
         console.error("Error fetching problems", err);
@@ -62,7 +63,7 @@ const Problems = () => {
           </div>
 
           <div className="divide-y divide-white/10">
-            {problems.map((problem, index) => (
+            {problems?.map((problem, index) => (
               <Link
                 key={problem.slug}
                 to={`/questions/${problem.slug}`}

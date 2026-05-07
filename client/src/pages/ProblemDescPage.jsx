@@ -95,9 +95,9 @@ ${data.terminal}`,
 
   useEffect(() => {
     const fetchProblem = async () => {
-      console.log("Fetching problem with slug:", slug);
+      
       try {
-        const res = await axios.get(`http://localhost:5000/api/questions/${slug}`);
+        const res = await axios.get(`${import.meta.env.VITE_SERVER_URI}/api/questions/${slug}`);
         const data = res.data.data;
         setProblem(data);
         setTestCases(data?.testCases || []);
@@ -117,7 +117,7 @@ ${data.terminal}`,
       setIsAiOutput(false);
       setShowConfetti(false);
       setOutput("Running...");
-      const res = await axios.post("http://localhost:5000/api/run", {
+      const res = await axios.post(`${import.meta.env.VITE_SERVER_URI}/api/run`, {
         language,
         code,
         testCases: [{ input, output: "" }],
@@ -155,7 +155,7 @@ ${data.terminal}`,
         return;
       }
 
-      const res = await axios.post("http://localhost:5000/api/run", {
+      const res = await axios.post(`${import.meta.env.VITE_SERVER_URI}/api/run`, {
         language,
         code,
         testCases: problem?.testCases,

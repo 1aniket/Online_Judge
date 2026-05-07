@@ -23,7 +23,7 @@ const DeleteQuestion = () => {
     try {
       setLoading(true);
 
-      await axios.delete(`http://localhost:5000/api/questions/${questionId}`, {
+      await axios.delete(`${import.meta.env.VITE_SERVER_URI}/api/questions/${questionId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

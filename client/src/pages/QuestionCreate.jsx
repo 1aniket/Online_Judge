@@ -69,7 +69,7 @@ const CreateQuestion = () => {
           : [],
       };
 
-      await axios.post("http://localhost:5000/api/questions/create", payload, {
+      await axios.post(`${import.meta.env.VITE_SERVER_URI}/api/questions/create`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
