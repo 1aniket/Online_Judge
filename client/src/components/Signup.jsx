@@ -35,7 +35,7 @@ const Signup = () => {
         <div className="hidden border-r border-white/10 bg-[linear-gradient(180deg,rgba(8,18,32,0.92),rgba(5,12,22,0.98))] p-10 xl:flex xl:flex-col xl:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-300">
-              CodeYukti
+              B.Engine
             </p>
             <h2 className="mt-5 text-4xl font-semibold leading-tight tracking-tight text-white">
               Create an account and start coding.

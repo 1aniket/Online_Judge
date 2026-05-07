@@ -38,7 +38,7 @@ function AppShell({ children }) {
                 </div>
                 <div>
                   <p className="text-2xl font-semibold leading-none tracking-tight text-white">
-                    CodeYukti
+                    B.Engine
                   </p>
                   <p className="text-sm text-slate-400">
                     Practice and run code in one place
